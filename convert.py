@@ -4,12 +4,16 @@ fh_in = open(argv[1], 'r')
 SUFFIX = None
 PREFIX = '101010101010101010101010000000000' # 23 TE 50% preamble, 10 TE 0% header
 CODES = []
+BITS_CODE = 32
+BITS_TOTAL = 66
+
+code_format = '{:0%db}' % BITS_TOTAL
 code_set = set()
 for line in fh_in.readlines():
     line = line.strip()
     if not line:
         continue
-    code = '{:066b}'.format(int(line))
+    code = code_format.format(int(line))
     if code in code_set:
         print("Saw repeat after %d codes!" % len(CODES))
         break
@@ -17,12 +21,12 @@ for line in fh_in.readlines():
     code_set.add(code)
 
     if not SUFFIX:
-        SUFFIX = code[32:]
+        SUFFIX = code[BITS_CODE:]
 
-    if code[32:] != SUFFIX:
+    if code[BITS_CODE:] != SUFFIX:
         raise ValueError("Inconsistent suffix")
 
-    CODES.append(code[:32])
+    CODES.append(code[:BITS_CODE])
 
 fh_in.close()
 
