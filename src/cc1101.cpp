@@ -21,6 +21,8 @@ CC1101Transceiver::CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN,
   this->GDO2 = GDO2;
   this->isr = isr;
   this->moduleNumber = CC1101Transceiver_module_number++;
+  this->rxFreq = -1;
+  this->txFreq = -1;
 }
 
 void CC1101Transceiver::setup(float mhz) {
