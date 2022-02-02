@@ -12,7 +12,7 @@ void setup() {
 
 void loop() {
   //Serial.print("Sending...");
-  //transmitNextCode();
+  transmitNextCode();
   //Serial.println(" Done!");
   delay(1000);
 }
