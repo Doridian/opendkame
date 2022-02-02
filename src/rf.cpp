@@ -10,6 +10,9 @@
 #define REPEATS 10
 #define REPEAT_DELAY 15000
 
+#define RX_FREQ 318
+#define TX_FREQ 430
+
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];
 
 static void _transmitData(const uint8_t *txData)
@@ -51,9 +54,11 @@ void transmitInit()
 {
     encodeCodeRaw(TX_DATA_BASE, PREFIX_BITS, PREFIX);
     encodeCodePWM(TX_DATA_BASE + SYMBOL_COUNT - (SUFFIX_BITS * 3), SUFFIX_BITS, SUFFIX);
-    cc1101.setup(318);
-    //cc1101.txFreq = 318;
-    //cc1101.rxFreq = 433;
+    cc1101.setup(RX_FREQ);
+#ifdef TX_FREQ
+    cc1101.txFreq = TX_FREQ;
+    cc1101.rxFreq = RX_FREQ;
+#endif
 }
 
 void transmitNextCode()
