@@ -2,12 +2,13 @@
 
 #include "codes.h"
 #include "rf.h"
+#include "config.h"
+#include "cc1101.h"
 
 #define SYMBOL_LENGTH 400
 #define SYMBOL_COUNT (PREFIX_BITS + ((SUFFIX_BITS + CODE_BITS) * 3))
-#define REPEATS 1
+#define REPEATS 10
 #define REPEAT_DELAY 10000
-#define PIN_GDO0 13
 
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];
 
@@ -50,6 +51,7 @@ void transmitInit()
 {
     encodeCodeRaw(TX_DATA_BASE, PREFIX_BITS, PREFIX);
     encodeCodePWM(TX_DATA_BASE + SYMBOL_COUNT - (SUFFIX_BITS * 3), SUFFIX_BITS, SUFFIX);
+    cc1101.setup();
 }
 
 void transmitNextCode()
@@ -59,12 +61,12 @@ void transmitNextCode()
 
     encodeCodePWM(txData + PREFIX_BITS, CODE_BITS, CODES[transmitCodeIndex()]);
 
-    // cc1101.beginTransmission();
+    cc1101.beginTransmission();
     for (uint8_t i = 0; i < REPEATS; i++)
     {
         _transmitData(txData);
         digitalWrite(PIN_GDO0, LOW);
         delayMicroseconds(REPEAT_DELAY);
     }
-    // cc1101.endTransmission();
+    cc1101.endTransmission();
 }
