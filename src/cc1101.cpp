@@ -44,9 +44,9 @@ void CC1101Transceiver::setup() {  // initialize the SPI pins
   SPI.setSCK(this->SCK);
   SPI.begin();
 
-  delayMicroseconds(10);
 
   // Set up the CC1101
+  delayMicroseconds(10);
   digitalWrite(this->CSN, LOW);
   delayMicroseconds(10);
   digitalWrite(this->CSN, HIGH);
@@ -56,6 +56,7 @@ void CC1101Transceiver::setup() {  // initialize the SPI pins
   this->spiStrobe(CC1101_SRES);
   while(digitalRead(this->MISO));
   digitalWrite(this->CSN, HIGH);
+  delayMicroseconds(10);
   // End reset procedure
 
   this->spiWriteReg(CC1101_IOCFG0,0x2E);  //GDO0 Output Pin Configuration
