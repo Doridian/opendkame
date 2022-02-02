@@ -10,7 +10,6 @@ public:
   void beginTransmission();
   void endTransmission();
   byte getTXPin();
-  void select();
 
 protected:
   byte SCK;

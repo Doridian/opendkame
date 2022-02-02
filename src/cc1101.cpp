@@ -85,14 +85,12 @@ void CC1101Transceiver::setup() {  // initialize the SPI pins
 }
 
 void CC1101Transceiver::beginTransmission() {
-  this->select();
   digitalWrite(this->GDO0, LOW);
   this->spiStrobe(CC1101_SIDLE);
   this->spiStrobe(CC1101_STX);
 }
 
 void CC1101Transceiver::endTransmission() {
-  this->select();
   digitalWrite(this->GDO0, LOW);
   this->spiStrobe(CC1101_SIDLE);
   this->spiStrobe(CC1101_SRX);
@@ -134,9 +132,3 @@ uint8_t CC1101Transceiver::spiReadReg(const uint8_t addr)
 }
 
 byte CC1101Transceiver::getTXPin() { return this->GDO0; }
-void CC1101Transceiver::select() {
-  Serial.println(this->spiReadStatus(CC1101_VERSION), HEX);
-  Serial.println(this->spiReadReg(CC1101_MDMCFG0), HEX);
-  Serial.println(this->spiReadReg(CC1101_MDMCFG1), HEX);
-  Serial.println(this->spiReadReg(CC1101_MDMCFG2), HEX);
-}
