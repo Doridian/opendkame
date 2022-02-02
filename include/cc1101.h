@@ -8,12 +8,15 @@
 class CC1101Transceiver {
 public:
   CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN, byte GDO0,
-                    byte GDO2);
+                    byte GDO2, voidFuncPtr isr);
   void setup();
   void beginTransmission();
   void endTransmission();
   byte getTXPin();
   void select();
+
+  float txFreq;
+  float rxFreq;
 
 protected:
   byte SCK;
@@ -23,6 +26,8 @@ protected:
   byte GDO0;
   byte GDO2;
   byte moduleNumber;
+  int inTX;
+  voidFuncPtr isr;
 };
 
 extern CC1101Transceiver cc1101;

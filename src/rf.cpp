@@ -52,6 +52,8 @@ void transmitInit()
     encodeCodeRaw(TX_DATA_BASE, PREFIX_BITS, PREFIX);
     encodeCodePWM(TX_DATA_BASE + SYMBOL_COUNT - (SUFFIX_BITS * 3), SUFFIX_BITS, SUFFIX);
     cc1101.setup();
+    cc1101.txFreq = 318;
+    cc1101.rxFreq = 433;
 }
 
 void transmitNextCode()
@@ -69,4 +71,21 @@ void transmitNextCode()
         delayMicroseconds(REPEAT_DELAY);
     }
     cc1101.endTransmission();
+}
+
+void receiveISR()
+{
+    static unsigned long lastChange = 0;
+    static bool lastState = LOW;
+
+    const unsigned long now = micros();
+    const bool state = digitalRead(PIN_GDO2);
+
+    Serial.print(lastState ? "HIGH" : "LOW");
+    Serial.print(" -> ");
+    Serial.print(state ? "HIGH" : "LOW");
+    Serial.print(" ");
+    Serial.println(now - lastChange);
+    lastChange = now;
+    lastState = state;
 }

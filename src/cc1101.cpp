@@ -4,20 +4,22 @@
 
 #include "cc1101.h"
 #include "config.h"
+#include "rf.h"
 
 CC1101Transceiver cc1101(PIN_CLK, PIN_MISO, PIN_MOSI, PIN_CS, PIN_GDO0,
-                         PIN_GDO2);
+                         PIN_GDO2, receiveISR);
 
 static byte CC1101Transceiver_module_number = 0;
 
 CC1101Transceiver::CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN,
-                                     byte GDO0, byte GDO2) {
+                                     byte GDO0, byte GDO2, voidFuncPtr isr) {
   this->SCK = SCK;
   this->MISO = MISO;
   this->MOSI = MOSI;
   this->CSN = CSN;
   this->GDO0 = GDO0;
   this->GDO2 = GDO2;
+  this->isr = isr;
   this->moduleNumber = CC1101Transceiver_module_number++;
 }
 
@@ -49,23 +51,32 @@ void CC1101Transceiver::setup() {
   CC1101_MAIN.SpiWriteReg(CC1101_IOCFG1, 0x2E);
   CC1101_MAIN.SpiWriteReg(CC1101_IOCFG2, 0x0D);
 
-  CC1101_MAIN.setMHZ(318);
   CC1101_MAIN.setModulation(2); // ASK/OOK
 
-  CC1101_MAIN.SetRx();
+  this->endTransmission();
 }
 
 void CC1101Transceiver::beginTransmission() {
   this->select();
+  CC1101_MAIN.setMHZ(this->txFreq);
+  detachInterrupt(this->GDO2);
   digitalWrite(this->GDO0, LOW);
   CC1101_MAIN.SetTx();
+  noInterrupts();
+  this->inTX++;
 }
 
 void CC1101Transceiver::endTransmission() {
   this->select();
   digitalWrite(this->GDO0, LOW);
+  if (this->inTX > 0) {
+    this->inTX--;
+    interrupts();
+  }
   CC1101_MAIN.SetRx();
   CC1101_MAIN.SetRx(); // yes, twice
+  CC1101_MAIN.setMHZ(this->rxFreq);
+  attachInterrupt(this->GDO2, this->isr, CHANGE);
 }
 
 byte CC1101Transceiver::getTXPin() { return this->GDO0; }
