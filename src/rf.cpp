@@ -51,9 +51,9 @@ void transmitInit()
 {
     encodeCodeRaw(TX_DATA_BASE, PREFIX_BITS, PREFIX);
     encodeCodePWM(TX_DATA_BASE + SYMBOL_COUNT - (SUFFIX_BITS * 3), SUFFIX_BITS, SUFFIX);
-    cc1101.setup();
-    cc1101.txFreq = 318;
-    cc1101.rxFreq = 433;
+    cc1101.setup(318);
+    //cc1101.txFreq = 318;
+    //cc1101.rxFreq = 433;
 }
 
 void transmitNextCode()

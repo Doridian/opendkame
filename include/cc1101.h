@@ -9,7 +9,7 @@ class CC1101Transceiver {
 public:
   CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN, byte GDO0,
                     byte GDO2, voidFuncPtr isr);
-  void setup();
+  void setup(float mhz);
   void beginTransmission();
   void endTransmission();
   byte getTXPin();

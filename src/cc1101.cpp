@@ -23,7 +23,7 @@ CC1101Transceiver::CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN,
   this->moduleNumber = CC1101Transceiver_module_number++;
 }
 
-void CC1101Transceiver::setup() {
+void CC1101Transceiver::setup(float mhz) {
   pinMode(this->GDO0, OUTPUT);
   pinMode(this->GDO2, INPUT);
   digitalWrite(this->GDO0, LOW);
@@ -52,13 +52,16 @@ void CC1101Transceiver::setup() {
   CC1101_MAIN.SpiWriteReg(CC1101_IOCFG2, 0x0D);
 
   CC1101_MAIN.setModulation(2); // ASK/OOK
+  CC1101_MAIN.setMHZ(mhz);
 
   this->beginReceive(false);
 }
 
 void CC1101Transceiver::beginTransmission() {
   this->select();
-  CC1101_MAIN.setMHZ(this->txFreq);
+  if (this->txFreq > 0) {
+    CC1101_MAIN.setMHZ(this->txFreq);
+  }
   detachInterrupt(this->GDO2);
   digitalWrite(this->GDO0, LOW);
   CC1101_MAIN.SetTx();
@@ -73,7 +76,9 @@ void CC1101Transceiver::beginReceive(bool enableInterrupts) {
   }
   CC1101_MAIN.SetRx();
   CC1101_MAIN.SetRx(); // yes, twice
-  CC1101_MAIN.setMHZ(this->rxFreq);
+  if (this->rxFreq > 0) {
+    CC1101_MAIN.setMHZ(this->rxFreq);
+  }
   attachInterrupt(this->GDO2, this->isr, CHANGE);
 }
 
