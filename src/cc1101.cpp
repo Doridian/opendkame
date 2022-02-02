@@ -53,7 +53,7 @@ void CC1101Transceiver::setup() {
 
   CC1101_MAIN.setModulation(2); // ASK/OOK
 
-  this->endTransmission();
+  this->beginReceive(false);
 }
 
 void CC1101Transceiver::beginTransmission() {
@@ -63,20 +63,22 @@ void CC1101Transceiver::beginTransmission() {
   digitalWrite(this->GDO0, LOW);
   CC1101_MAIN.SetTx();
   noInterrupts();
-  this->inTX++;
 }
 
-void CC1101Transceiver::endTransmission() {
+void CC1101Transceiver::beginReceive(bool enableInterrupts) {
   this->select();
   digitalWrite(this->GDO0, LOW);
-  if (this->inTX > 0) {
-    this->inTX--;
+  if (enableInterrupts) {
     interrupts();
   }
   CC1101_MAIN.SetRx();
   CC1101_MAIN.SetRx(); // yes, twice
   CC1101_MAIN.setMHZ(this->rxFreq);
   attachInterrupt(this->GDO2, this->isr, CHANGE);
+}
+
+void CC1101Transceiver::endTransmission() {
+  this->beginReceive(true);
 }
 
 byte CC1101Transceiver::getTXPin() { return this->GDO0; }
