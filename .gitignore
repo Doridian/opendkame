@@ -5,3 +5,4 @@
 .vscode/ipch
 include/codes.h
 src/codes.cpp
+include/rfconfig.h

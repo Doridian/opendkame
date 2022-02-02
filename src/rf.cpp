@@ -4,14 +4,9 @@
 #include "rf.h"
 #include "config.h"
 #include "cc1101.h"
+#include "rfconfig.h"
 
-#define SYMBOL_LENGTH 400
-#define SYMBOL_COUNT (PREFIX_BITS + ((SUFFIX_BITS + CODE_BITS) * 3))
-#define REPEATS 10
-#define REPEAT_DELAY 15000
-
-#define RX_FREQ 318
-#define TX_FREQ 430
+#define EXTRACT_BIT(raw, len, i) ((raw >> (len - i - 1)) & 1)
 
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];
 
@@ -28,7 +23,7 @@ static void encodeCodeRaw(uint8_t *data, uint32_t len, uint64_t raw)
 {
     for (uint32_t i = 0; i < len; i++)
     {
-        data[i] = (raw >> (len - i - 1)) & 1;
+        data[i] = EXTRACT_BIT(raw, len, i);
     }
 }
 
@@ -37,7 +32,7 @@ static void encodeCodePWM(uint8_t *data, uint32_t len, uint64_t raw)
     for (uint32_t i = 0; i < len; i++)
     {
         const int j = i * 3;
-        const bool on = (raw >> (len - i - 1)) & 1;
+        const bool on = EXTRACT_BIT(raw, len, i);
         data[j] = 1;
         data[j + 1] = !on;
         data[j + 2] = 0;
@@ -76,6 +71,30 @@ void transmitNextCode()
         delayMicroseconds(REPEAT_DELAY);
     }
     cc1101.endTransmission();
+}
+
+void transmitLearningCode()
+{
+#ifdef TX_FREQ
+    cc1101.txFreq = RX_FREQ;
+#endif
+
+    cc1101.beginTransmission();
+    for (uint8_t i = 0; i < REPEATS; i++)
+    {
+        for (uint16_t j = 0; j < sizeof(LEARNING_CODE); j++)
+        {
+            digitalWrite(PIN_GDO0, LEARNING_CODE[j] > 0);
+            delayMicroseconds(abs(LEARNING_CODE[j]));
+        }
+        digitalWrite(PIN_GDO0, LOW);
+        delayMicroseconds(REPEAT_DELAY);
+    }
+    cc1101.endTransmission();
+
+#ifdef TX_FREQ
+    cc1101.txFreq = TX_FREQ;
+#endif
 }
 
 void receiveISR()

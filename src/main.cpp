@@ -11,8 +11,16 @@ void setup() {
 }
 
 void loop() {
-  //Serial.print("Sending...");
-  transmitNextCode();
-  //Serial.println(" Done!");
-  delay(1000);
+  String str = Serial.readStringUntil('\n');
+  str.trim();
+  str.toLowerCase();
+  if (str.equals("learn"))
+  {
+    transmitLearningCode();
+  }
+  else if (str.equals("open"))
+  {
+    transmitNextCode();
+  }
+  delay(100);
 }
