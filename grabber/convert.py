@@ -30,7 +30,7 @@ for line in fh_in.readlines():
 
 fh_in.close()
 
-fh_out = open('include/codes.h', 'w')
+fh_out = open('../include/codes.h', 'w')
 fh_out.write(f'''#pragma once
 #include <Arduino.h>
 
@@ -47,7 +47,7 @@ extern const uint64_t PROGMEM CODES[];
 ''')
 fh_out.close()
 
-fh_out = open('src/codes.cpp', 'w')
+fh_out = open('../src/codes.cpp', 'w')
 fh_out.write(f'''#include <Arduino.h>
 #include "codes.h"
 
