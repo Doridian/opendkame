@@ -105,11 +105,11 @@ void receiveISR()
     const unsigned long now = micros();
     const bool state = digitalRead(PIN_GDO2);
 
-    Serial.print(lastState ? "HIGH" : "LOW");
+   /* Serial.print(lastState ? "HIGH" : "LOW");
     Serial.print(" -> ");
     Serial.print(state ? "HIGH" : "LOW");
     Serial.print(" ");
-    Serial.println(now - lastChange);
+    Serial.println(now - lastChange);*/
     lastChange = now;
     lastState = state;
 }

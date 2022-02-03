@@ -27,8 +27,6 @@ protected:
   byte GDO2;
   byte moduleNumber;
   voidFuncPtr isr;
-
-  void beginReceive(bool enableInterrupts);
 };
 
 extern CC1101Transceiver cc1101;
