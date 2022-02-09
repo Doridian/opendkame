@@ -25,9 +25,15 @@ void loop() {
     Serial.println("OPEN");
     transmitNextCode();
   }
+  else if (str.equals("rxdebug"))
+  {
+    Serial.print("RXDEBUG ");
+    Serial.println(!rxDebugEnable);
+    rxDebugEnable = !rxDebugEnable;
+  }
   else if (str.equals("test"))
   {
-    Serial.println("TEST");
+    Serial.print("TEST ");
     cc1101.select();
     Serial.println(CC1101_MAIN.SpiReadStatus(CC1101_VERSION));
   }

@@ -8,6 +8,8 @@
 
 #define EXTRACT_BIT(raw, len, i) ((raw >> (len - i - 1)) & 1)
 
+bool rxDebugEnable = false;
+
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];
 
 static void _transmitData(const uint8_t *txData)
@@ -102,14 +104,23 @@ void receiveISR()
     static unsigned long lastChange = 0;
     static bool lastState = LOW;
 
-    const unsigned long now = micros();
     const bool state = digitalRead(PIN_GDO2);
+    if (state == lastState)
+    {
+        return;
+    }
 
-   /* Serial.print(lastState ? "HIGH" : "LOW");
-    Serial.print(" -> ");
-    Serial.print(state ? "HIGH" : "LOW");
-    Serial.print(" ");
-    Serial.println(now - lastChange);*/
+    const unsigned long now = micros();
+
+    if (rxDebugEnable)
+    {
+        Serial.print(lastState ? "HIGH" : "LOW");
+        Serial.print(" -> ");
+        Serial.print(state ? "HIGH" : "LOW");
+        Serial.print(" ");
+        Serial.println(now - lastChange);
+    }
+
     lastChange = now;
     lastState = state;
 }
