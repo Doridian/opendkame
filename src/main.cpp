@@ -47,5 +47,5 @@ void serialLoop() {
 void loop() {
   serialLoop();
   transmitLoop();
-  delay(100);
+  delay(10);
 }
