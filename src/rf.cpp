@@ -113,7 +113,8 @@ void receiveISR()
 {
     static unsigned long lastChange = 0;
     static bool lastState = LOW;
-    static uint32_t recvState = 0;
+    static uint32_t recvState = LEARNING_CODE_START;
+    static unsigned long lastCorrect = 0;
 
     const bool state = digitalRead(PIN_GDO2);
     if (state == lastState)
@@ -126,14 +127,25 @@ void receiveISR()
     const unsigned long delayTime = now - lastChange;
 
     const bool correctState = LEARNING_CODE[recvState] < 0;
-    const bool correctVal = abs(LEARNING_CODE[recvState]);
+    const int32_t correctVal = abs(LEARNING_CODE[recvState]);
 
-    const int32_t minDelay = correctVal - 100;
-    const int32_t maxDelay = correctVal + 100;
+    const int32_t minDelay = correctVal - (correctVal / 4);
+    const int32_t maxDelay = correctVal + (correctVal / 4);
+
+    if (rxDebugEnable)
+    {
+        Serial.print(minDelay);
+        Serial.print(" ");
+        Serial.print(maxDelay);
+        Serial.print(" ");
+        Serial.print(correctState);
+        Serial.print(" ");
+        Serial.println(delayTime);
+    }
 
     if (delayTime > maxDelay || delayTime < minDelay)
     {
-        recvState = 0;
+        recvState = LEARNING_CODE_START;
     }
     else
     {
@@ -143,11 +155,18 @@ void receiveISR()
             Serial.print("RS ");
             Serial.println(recvState);
         }
-        if (recvState >= LEARNING_CODE_LENGTH)
+        if (recvState >= LEARNING_CODE_LENGTH - 1)
         {
-            recvState = 0;
-            Serial.println("Got correct invocation");
-            //transmitNextCode();
+            recvState = LEARNING_CODE_START;
+            if (now - lastCorrect >= RX_COOLDOWN)
+            {
+                if (rxDebugEnable)
+                {
+                    Serial.println("Transmitting code!");
+                }
+                transmitNextCode();
+            }
+            lastCorrect = now;
         }
     }
 

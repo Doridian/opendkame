@@ -10,11 +10,15 @@
 void setup() {
   EEPROM.begin(EEPROM_SIZE);
   Serial.begin(115200);
-  while (!Serial) delay(100);
   transmitInit();
 }
 
 void loop() {
+  if (!Serial) {
+    delay(100);
+    return;
+  }
+
   String str = Serial.readStringUntil('\n');
   str.trim();
   str.toLowerCase();

@@ -7,3 +7,5 @@
 
 #define EEPROM_SIZE 256
 #define EEPROM_CODE_INDEX 0
+
+#define RX_COOLDOWN (2000 * 1000)
