@@ -57,6 +57,11 @@ int transmitCodeIndex()
     return transmitCodeIdx;
 }
 
+uint32_t getTransmitCodeIndex()
+{
+    return transmitCodeIdx;
+}
+
 void transmitInit()
 {
     EEPROM.get(EEPROM_CODE_INDEX, transmitCodeIdx);

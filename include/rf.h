@@ -7,3 +7,4 @@ void transmitLoop();
 void transmitNextCode();
 void receiveISR();
 void transmitLearningCode();
+uint32_t getTransmitCodeIndex();

@@ -36,11 +36,16 @@ void serialLoop() {
     Serial.println(!rxDebugEnable);
     rxDebugEnable = !rxDebugEnable;
   }
-  else if (str.equals("test"))
+  else if (str.equals("cc1101version"))
   {
-    Serial.print("TEST ");
+    Serial.print("CC1101VERSION ");
     cc1101.select();
     Serial.println(CC1101_MAIN.SpiReadStatus(CC1101_VERSION));
+  }
+  else if (str.equals("index"))
+  {
+    Serial.print("INDEX ");
+    Serial.println(getTransmitCodeIndex());
   }
 }
 
