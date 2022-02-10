@@ -10,6 +10,7 @@
 #define EXTRACT_BIT(raw, len, i) ((raw >> (len - i - 1)) & 1)
 
 bool rxDebugEnable = false;
+bool txNextCodeEnable = false;
 
 uint32_t transmitCodeIdx = 0;
 
@@ -70,6 +71,11 @@ void transmitInit()
 
 void transmitNextCode()
 {
+    txNextCodeEnable = true;
+}
+
+void realTransmitNextCode()
+{
     uint8_t txData[SYMBOL_COUNT];
     memcpy(txData, TX_DATA_BASE, SYMBOL_COUNT);
 
@@ -83,6 +89,15 @@ void transmitNextCode()
         delayMicroseconds(REPEAT_DELAY);
     }
     cc1101.endTransmission();
+}
+
+void transmitLoop()
+{
+    if (txNextCodeEnable)
+    {
+        txNextCodeEnable = false;
+        realTransmitNextCode();
+    }
 }
 
 void transmitLearningCode()

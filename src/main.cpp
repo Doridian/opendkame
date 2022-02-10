@@ -13,9 +13,8 @@ void setup() {
   transmitInit();
 }
 
-void loop() {
+void serialLoop() {
   if (!Serial) {
-    delay(100);
     return;
   }
 
@@ -44,5 +43,10 @@ void loop() {
     cc1101.select();
     Serial.println(CC1101_MAIN.SpiReadStatus(CC1101_VERSION));
   }
+}
+
+void loop() {
+  serialLoop();
+  transmitLoop();
   delay(100);
 }

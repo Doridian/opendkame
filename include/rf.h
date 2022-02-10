@@ -3,6 +3,7 @@
 extern bool rxDebugEnable;
 
 void transmitInit();
+void transmitLoop();
 void transmitNextCode();
 void receiveISR();
 void transmitLearningCode();
