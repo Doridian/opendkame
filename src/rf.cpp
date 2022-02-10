@@ -11,7 +11,6 @@
 
 bool rxDebugEnable = false;
 
-#define EEPROM_CODE_INDEX 0
 uint32_t transmitCodeIdx = 0;
 
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];

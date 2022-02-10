@@ -5,9 +5,10 @@
 #include "codes.h"
 #include "rf.h"
 #include "cc1101.h"
+#include "config.h"
 
 void setup() {
-  EEPROM.begin(256);
+  EEPROM.begin(EEPROM_SIZE);
   Serial.begin(115200);
   while (!Serial) delay(100);
   transmitInit();
