@@ -12,7 +12,8 @@ CC1101Transceiver cc1101(PIN_CLK, PIN_MISO, PIN_MOSI, PIN_CS, PIN_GDO0,
 static byte CC1101Transceiver_module_number = 0;
 
 CC1101Transceiver::CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN,
-                                     byte GDO0, byte GDO2, voidFuncPtr isr) {
+                                     byte GDO0, byte GDO2, voidFuncPtr isr)
+{
   this->SCK = SCK;
   this->MISO = MISO;
   this->MOSI = MOSI;
@@ -25,7 +26,8 @@ CC1101Transceiver::CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN,
   this->txFreq = -1;
 }
 
-void CC1101Transceiver::setup(float mhz) {
+void CC1101Transceiver::setup(float mhz)
+{
   pinMode(this->GDO0, OUTPUT);
   pinMode(this->GDO2, INPUT);
   digitalWrite(this->GDO0, LOW);
@@ -60,9 +62,11 @@ void CC1101Transceiver::setup(float mhz) {
   this->endTransmission();
 }
 
-void CC1101Transceiver::beginTransmission() {
+void CC1101Transceiver::beginTransmission()
+{
   this->select();
-  if (this->txFreq > 0) {
+  if (this->txFreq > 0)
+  {
     CC1101_MAIN.setMHZ(this->txFreq);
     CC1101_MAIN.setPA(100);
   }
@@ -71,10 +75,12 @@ void CC1101Transceiver::beginTransmission() {
   CC1101_MAIN.SetTx();
 }
 
-void CC1101Transceiver::endTransmission() {
+void CC1101Transceiver::endTransmission()
+{
   this->select();
   digitalWrite(this->GDO0, LOW);
-  if (this->rxFreq > 0) {
+  if (this->rxFreq > 0)
+  {
     CC1101_MAIN.setMHZ(this->rxFreq);
   }
   CC1101_MAIN.SetRx();

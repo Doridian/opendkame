@@ -5,7 +5,8 @@
 
 #define CC1101_MAIN ELECHOUSE_cc1101
 
-class CC1101Transceiver {
+class CC1101Transceiver
+{
 public:
   CC1101Transceiver(byte SCK, byte MISO, byte MOSI, byte CSN, byte GDO0,
                     byte GDO2, voidFuncPtr isr);

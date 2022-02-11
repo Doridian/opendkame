@@ -6,14 +6,17 @@
 #include "cc1101.h"
 #include "config.h"
 
-void setup() {
+void setup()
+{
   EEPROM.begin(EEPROM_SIZE);
   Serial.begin(115200);
   transmitInit();
 }
 
-void serialLoop() {
-  if (!Serial || !Serial.available()) {
+void serialLoop()
+{
+  if (!Serial || !Serial.available())
+  {
     return;
   }
 
@@ -49,7 +52,8 @@ void serialLoop() {
   }
 }
 
-void loop() {
+void loop()
+{
   serialLoop();
   transmitLoop();
   delay(10);
