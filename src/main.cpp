@@ -47,6 +47,11 @@ void serialHandleCommand()
     Serial.print("INDEX ");
     Serial.println(transmitGetCodeIndex());
   }
+  else
+  {
+    Serial.print("UNKNOWN ");
+    Serial.println(serialBuffer);
+  }
 }
 
 void serialLoop()
