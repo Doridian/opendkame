@@ -13,7 +13,7 @@ void setup() {
 }
 
 void serialLoop() {
-  if (!Serial) {
+  if (!Serial || !Serial.available()) {
     return;
   }
 
