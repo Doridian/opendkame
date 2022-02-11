@@ -45,7 +45,7 @@ static void encodeCodePWM(uint8_t *data, uint32_t len, uint64_t raw)
     }
 }
 
-uint32_t transmitGetNextCodeIndex()
+static uint32_t transmitGetNextCodeIndex()
 {
     transmitCodeIndex++;
     if (transmitCodeIndex >= CODE_COUNT)
@@ -79,7 +79,7 @@ void transmitNextCode()
     txNextCodeEnable = true;
 }
 
-void realTransmitNextCode()
+static void realTransmitNextCode()
 {
     uint8_t txData[SYMBOL_COUNT];
     memcpy(txData, TX_DATA_BASE, SYMBOL_COUNT);
@@ -180,9 +180,9 @@ void receiveISR()
             recvState = LEARNING_CODE_START;
             if (now - lastCorrect >= RX_COOLDOWN)
             {
-                if (rxDebugEnable)
+                if (Serial)
                 {
-                    Serial.println("Transmitting code!");
+                    Serial.println("Got correct RF -> Transmitting code!");
                 }
                 transmitNextCode();
             }
@@ -190,7 +190,6 @@ void receiveISR()
         }
     }
 
-    /*
     if (rxDebugEnable)
     {
         Serial.print(lastState ? "HIGH" : "LOW");
@@ -199,7 +198,6 @@ void receiveISR()
         Serial.print(" ");
         Serial.println(now - lastChange);
     }
-    */
 
     lastChange = now;
     lastState = state;
