@@ -12,7 +12,7 @@
 bool rxDebugEnable = false;
 bool txNextCodeEnable = false;
 
-uint32_t transmitCodeIdx = 0;
+uint32_t transmitCodeIndex = 0;
 
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];
 
@@ -47,24 +47,24 @@ static void encodeCodePWM(uint8_t *data, uint32_t len, uint64_t raw)
 
 uint32_t transmitGetNextCodeIndex()
 {
-    transmitCodeIdx++;
-    if (transmitCodeIdx >= CODE_COUNT)
+    transmitCodeIndex++;
+    if (transmitCodeIndex >= CODE_COUNT)
     {
-        transmitCodeIdx = 0;
+        transmitCodeIndex = 0;
     }
-    EEPROM.put(EEPROM_CODE_INDEX, transmitCodeIdx);
+    EEPROM.put(EEPROM_CODE_INDEX, transmitCodeIndex);
     EEPROM.commit();
-    return transmitCodeIdx;
+    return transmitCodeIndex;
 }
 
 uint32_t transmitGetCodeIndex()
 {
-    return transmitCodeIdx;
+    return transmitCodeIndex;
 }
 
 void transmitInit()
 {
-    EEPROM.get(EEPROM_CODE_INDEX, transmitCodeIdx);
+    EEPROM.get(EEPROM_CODE_INDEX, transmitCodeIndex);
     encodeCodeRaw(TX_DATA_BASE, PREFIX_BITS, PREFIX);
     encodeCodePWM(TX_DATA_BASE + SYMBOL_COUNT - (SUFFIX_BITS * 3), SUFFIX_BITS, SUFFIX);
     cc1101.setup(RX_FREQ);
