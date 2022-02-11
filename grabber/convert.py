@@ -2,7 +2,8 @@ from sys import argv
 fh_in = open(argv[1], 'r')
 
 SUFFIX = None
-PREFIX = '101010101010101010101010000000000' # 23 TE 50% preamble, 10 TE 0% header
+# 23 TE 50% preamble, 10 TE 0% header
+PREFIX = '101010101010101010101010000000000'
 CODES = []
 BITS_CODE = 32
 BITS_TOTAL = 66

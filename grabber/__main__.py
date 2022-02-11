@@ -5,12 +5,13 @@ from signal import signal, SIGUSR1
 
 REPEATS_NEEDED = 2
 SIGNAL_DONE_REPEATS_NEEDED = 10
-RELAY_PIN = 7 # GPIO 4
+RELAY_PIN = 7  # GPIO 4
 VALID_SIGNAL_SETS = set([pow(2, 16), pow(2, 17), pow(2, 18)])
 GPIO.setmode(GPIO.BOARD)
 
 signal_sequence = None
 signal_set = None
+
 
 def load_data():
     global signal_sequence
@@ -20,9 +21,13 @@ def load_data():
     signal_sequence = [int(x.strip()) for x in fh.readlines() if x.strip()]
     fh.close()
     signal_set = set(signal_sequence)
+
+
 load_data()
 
 data_file = open("data.txt", "a")
+
+
 def append_signal(pkt):
     is_repeat = pkt in signal_set
     signal_sequence.append(pkt)
@@ -31,10 +36,13 @@ def append_signal(pkt):
     data_file.flush()
     return is_repeat
 
+
 GPIO.setup(RELAY_PIN, GPIO.OUT)
+
 
 def set_relay(on):
     GPIO.output(RELAY_PIN, on)
+
 
 def grab_signal():
     set_relay(True)
@@ -53,14 +61,19 @@ def grab_signal():
 
     return decode_packet(previous_data)
 
+
 setup_radio()
 set_relay(False)
 sleep(1)
 
 should_run = True
+
+
 def sigusr1_handler(signal, frame):
     global should_run
     should_run = False
+
+
 signal(SIGUSR1, sigusr1_handler)
 
 signal_done_repeats = 0

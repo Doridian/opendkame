@@ -9,15 +9,14 @@
 
 void setup()
 {
-  EEPROM.begin(EEPROM_SIZE);
-  serialInit();
-  transmitInit();
+    EEPROM.begin(EEPROM_SIZE);
+    serialInit();
+    transmitInit();
 }
-
 
 void loop()
 {
-  serialLoop();
-  transmitLoop();
-  delay(10);
+    serialLoop();
+    transmitLoop();
+    delay(10);
 }
