@@ -48,7 +48,7 @@ void serialLoop()
   else if (str.equals("index"))
   {
     Serial.print("INDEX ");
-    Serial.println(getTransmitCodeIndex());
+    Serial.println(transmitGetCodeIndex());
   }
 }
 

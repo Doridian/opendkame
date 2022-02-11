@@ -45,7 +45,7 @@ static void encodeCodePWM(uint8_t *data, uint32_t len, uint64_t raw)
     }
 }
 
-int transmitCodeIndex()
+uint32_t transmitGetNextCodeIndex()
 {
     transmitCodeIdx++;
     if (transmitCodeIdx >= CODE_COUNT)
@@ -57,7 +57,7 @@ int transmitCodeIndex()
     return transmitCodeIdx;
 }
 
-uint32_t getTransmitCodeIndex()
+uint32_t transmitGetCodeIndex()
 {
     return transmitCodeIdx;
 }
@@ -84,7 +84,7 @@ void realTransmitNextCode()
     uint8_t txData[SYMBOL_COUNT];
     memcpy(txData, TX_DATA_BASE, SYMBOL_COUNT);
 
-    encodeCodePWM(txData + PREFIX_BITS, CODE_BITS, CODES[transmitCodeIndex()]);
+    encodeCodePWM(txData + PREFIX_BITS, CODE_BITS, CODES[transmitGetNextCodeIndex()]);
 
     cc1101.beginTransmission();
     for (uint8_t i = 0; i < REPEATS; i++)
