@@ -6,49 +6,66 @@
 #include "cc1101.h"
 #include "config.h"
 
+String serialBuffer;
+
 void setup()
 {
   EEPROM.begin(EEPROM_SIZE);
+  serialBuffer.reserve(128);
   Serial.begin(115200);
   transmitInit();
 }
 
-void serialLoop()
+void serialHandleCommand()
 {
-  if (!Serial || !Serial.available())
-  {
-    return;
-  }
-
-  String str = Serial.readStringUntil('\n');
-  str.trim();
-  str.toLowerCase();
-  if (str.equals("learn"))
+  serialBuffer.trim();
+  serialBuffer.toLowerCase();
+  if (serialBuffer.equals("learn"))
   {
     Serial.println("LEARN");
     transmitLearningCode();
   }
-  else if (str.equals("open"))
+  else if (serialBuffer.equals("open"))
   {
     Serial.println("OPEN");
     transmitNextCode();
   }
-  else if (str.equals("rxdebug"))
+  else if (serialBuffer.equals("rxdebug"))
   {
     Serial.print("RXDEBUG ");
     Serial.println(!rxDebugEnable);
     rxDebugEnable = !rxDebugEnable;
   }
-  else if (str.equals("cc1101version"))
+  else if (serialBuffer.equals("cc1101version"))
   {
     Serial.print("CC1101VERSION ");
     cc1101.select();
     Serial.println(CC1101_MAIN.SpiReadStatus(CC1101_VERSION));
   }
-  else if (str.equals("index"))
+  else if (serialBuffer.equals("index"))
   {
     Serial.print("INDEX ");
     Serial.println(transmitGetCodeIndex());
+  }
+}
+
+void serialLoop()
+{
+  while (Serial && Serial.available())
+  {
+    char c = Serial.read();
+    if (c == '\n' || c == '\r')
+    {
+      if (serialBuffer.length() > 0)
+      {
+        serialHandleCommand();
+        serialBuffer = "";
+      }
+    }
+    else
+    {
+      serialBuffer += c;
+    }
   }
 }
 
