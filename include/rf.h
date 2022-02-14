@@ -8,3 +8,4 @@ void transmitNextCode();
 void receiveISR();
 void transmitLearningCode();
 uint32_t transmitGetCodeIndex();
+void transmitSetCodeIndex(uint32_t newIndex);

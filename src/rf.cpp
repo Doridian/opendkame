@@ -45,6 +45,12 @@ static void encodeCodePWM(uint8_t *data, uint32_t len, uint64_t raw)
     }
 }
 
+static inline void transmitSaveCodeIndex()
+{
+    EEPROM.put(EEPROM_CODE_INDEX, transmitCodeIndex);
+    EEPROM.commit();
+}
+
 static uint32_t transmitGetNextCodeIndex()
 {
     transmitCodeIndex++;
@@ -52,14 +58,19 @@ static uint32_t transmitGetNextCodeIndex()
     {
         transmitCodeIndex = 0;
     }
-    EEPROM.put(EEPROM_CODE_INDEX, transmitCodeIndex);
-    EEPROM.commit();
+    transmitSaveCodeIndex();
     return transmitCodeIndex;
 }
 
 uint32_t transmitGetCodeIndex()
 {
     return transmitCodeIndex;
+}
+
+void transmitSetCodeIndex(uint32_t newIndex)
+{
+    transmitCodeIndex = newIndex;
+    transmitSaveCodeIndex();
 }
 
 void transmitInit()

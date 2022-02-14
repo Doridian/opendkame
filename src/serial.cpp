@@ -38,8 +38,14 @@ static void serialHandleCommand()
         cc1101.select();
         Serial.print(CC1101_MAIN.SpiReadStatus(CC1101_VERSION));
     }
-    else if (serialBuffer.equals("index"))
+    else if (serialBuffer.equals("getindex"))
     {
+        Serial.print(transmitGetCodeIndex());
+    }
+    else if (serialBuffer.equals("setindex"))
+    {
+        uint32_t newIndex = serialBuffer.substring(9).toInt();
+        transmitSetCodeIndex(newIndex);
         Serial.print(transmitGetCodeIndex());
     }
     else
