@@ -6,6 +6,7 @@
 #include "config.h"
 #include "cc1101.h"
 #include "rfconfig.h"
+#include "led.h"
 
 #define EXTRACT_BIT(raw, len, i) ((raw >> (len - i - 1)) & 1)
 
@@ -92,6 +93,8 @@ void transmitNextCode()
 
 static void realTransmitNextCode()
 {
+    ledSetRGB(255, 0, 0);
+
     uint8_t txData[SYMBOL_COUNT];
     memcpy(txData, TX_DATA_BASE, SYMBOL_COUNT);
 
@@ -105,6 +108,8 @@ static void realTransmitNextCode()
         delayMicroseconds(REPEAT_DELAY);
     }
     cc1101.endTransmission();
+
+    ledSetOff();
 }
 
 void transmitLoop()
@@ -118,6 +123,8 @@ void transmitLoop()
 
 void transmitLearningCode()
 {
+    ledSetRGB(255, 255, 255);
+
 #ifdef TX_FREQ
     cc1101.txFreq = RX_FREQ;
 #endif
@@ -138,6 +145,8 @@ void transmitLearningCode()
 #ifdef TX_FREQ
     cc1101.txFreq = TX_FREQ;
 #endif
+
+    ledSetOff();
 }
 
 void receiveISR()
@@ -186,6 +195,7 @@ void receiveISR()
             Serial.print("RS ");
             Serial.println(recvState);
         }
+
         if (recvState >= LEARNING_CODE_LENGTH - 1)
         {
             recvState = LEARNING_CODE_START;
@@ -195,6 +205,8 @@ void receiveISR()
                 {
                     Serial.println("Got correct RF -> Transmitting code!");
                 }
+
+                ledSetRGB(0, 255, 0);
                 transmitNextCode();
             }
             lastCorrect = now;

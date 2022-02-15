@@ -42,7 +42,7 @@ static void serialHandleCommand()
     {
         Serial.print(transmitGetCodeIndex());
     }
-    else if (serialBuffer.equals("setindex"))
+    else if (serialBuffer.startsWith("setindex "))
     {
         uint32_t newIndex = serialBuffer.substring(9).toInt();
         transmitSetCodeIndex(newIndex);

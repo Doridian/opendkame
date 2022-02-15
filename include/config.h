@@ -5,6 +5,9 @@
 #define PIN_GDO0 28
 #define PIN_GDO2 29
 
+#define PIN_NEOPIXEL 12
+#define PIN_NEOPIXEL_POWER 11
+
 #define EEPROM_SIZE 256
 #define EEPROM_CODE_INDEX 0
 
