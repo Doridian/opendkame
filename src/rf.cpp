@@ -17,15 +17,6 @@ uint32_t transmitCodeIndex = 0;
 
 uint8_t TX_DATA_BASE[SYMBOL_COUNT];
 
-static void _transmitData(const uint8_t *txData)
-{
-    for (uint16_t i = 0; i < SYMBOL_COUNT; i++)
-    {
-        digitalWrite(PIN_GDO0, txData[i]);
-        delayMicroseconds(SYMBOL_LENGTH);
-    }
-}
-
 static void encodeCodeRaw(uint8_t *data, uint32_t len, uint64_t raw)
 {
     for (uint32_t i = 0; i < len; i++)
@@ -103,7 +94,11 @@ static void realTransmitNextCode()
     cc1101.beginTransmission();
     for (uint8_t i = 0; i < REPEATS; i++)
     {
-        _transmitData(txData);
+        for (uint16_t i = 0; i < SYMBOL_COUNT; i++)
+        {
+            digitalWrite(PIN_GDO0, txData[i]);
+            delayMicroseconds(SYMBOL_LENGTH);
+        }
         digitalWrite(PIN_GDO0, LOW);
         delayMicroseconds(REPEAT_DELAY);
     }
